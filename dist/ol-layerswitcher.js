@@ -287,6 +287,46 @@ var LayerSwitcher = function (_Control) {
         }
 
         /**
+        * **Static** Build a control to be inserted into panel
+        * @private
+        * @param {object} ctrl an addcontrol object from LayerSwitcher
+        */
+
+    }, {
+        key: 'buildControl_',
+        value: function buildControl_(lyr, ctrl) {
+            if (ctrl == 'select' && ctrl.id) {
+                var label = document.createElement('label');
+                label.innerHTML(ctrl.title);
+
+                var sel = document.createElement('select');
+                sel.id = ctrl.id;
+                label.setAttribute('for', ctrl.id);
+
+                if (ctrl.options) {
+                    var options_str = '';
+                    var selected = '';
+                    ctrl.options.forEach(function (item) {
+                        var selected = localStorage[ctrl.id] === item ? 'selected' : '';
+                        options_str += 'option value="' + item + '" ' + selected + '>' + item + '</option>';
+                    });
+                    sel.innerHTML = options_str;
+                }
+                if (ctrl.change) {
+                    var lyrs = lyr.getLayers().getArray().getLayers().getArray().slice();
+                    sel.onchange = ctrl.change.bind(lyrs, ctrl.id);
+                }
+                var li = document.createElement('li');
+                li.appendChild(label);
+                li.appendChild(sel);
+
+                return li;
+            } else {
+                return null;
+            }
+        }
+
+        /**
         * **Static** Render all layers that are children of a group.
         * @private
         * @param {ol.Map} map The map instance.
@@ -320,8 +360,18 @@ var LayerSwitcher = function (_Control) {
 
                 label.innerHTML = lyrTitle;
                 li.appendChild(label);
+
+                // add child layers
                 var ul = document.createElement('ul');
                 li.appendChild(ul);
+
+                // Add a control
+                if (lyr.get('addcontrol')) {
+                    var ctrl = LayerSwitcher.buildControl_(lyr, lyr.get('addcontrol'));
+                    if (ctrl) {
+                        ul.appendChild(ctrl);
+                    }
+                }
 
                 LayerSwitcher.renderLayers_(map, lyr, ul);
             } else {
