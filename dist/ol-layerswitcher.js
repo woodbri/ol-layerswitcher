@@ -308,7 +308,7 @@ var LayerSwitcher = function (_Control) {
                     var selected = '';
                     ctrl.options.forEach(function (item) {
                         var selected = localStorage[ctrl.id] === item ? 'selected' : '';
-                        options_str += 'option value="' + item + '" ' + selected + '>' + item + '</option>';
+                        options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
                     });
                     sel.innerHTML = options_str;
                 }
