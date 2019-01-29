@@ -295,7 +295,7 @@ var LayerSwitcher = function (_Control) {
     }, {
         key: 'buildControl_',
         value: function buildControl_(lyr, ctrl) {
-            if (ctrl == 'select' && ctrl.id) {
+            if (ctrl.type == 'select' && ctrl.id) {
                 var label = document.createElement('label');
                 label.innerHTML(ctrl.title);
 

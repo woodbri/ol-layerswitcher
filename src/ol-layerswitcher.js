@@ -172,7 +172,7 @@ export default class LayerSwitcher extends Control {
     * @param {object} ctrl an addcontrol object from LayerSwitcher
     */
     static buildControl_(lyr, ctrl) {
-        if (ctrl == 'select' && ctrl.id) {
+        if (ctrl.type == 'select' && ctrl.id) {
             var label = document.createElement('label');
             label.innerHTML(ctrl.title);
 
