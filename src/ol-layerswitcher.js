@@ -190,7 +190,7 @@ export default class LayerSwitcher extends Control {
                 sel.innerHTML = options_str;
             }
             if (ctrl.change) {
-                var lyrs = lyr.getLayers().getArray().getLayers().getArray().slice();
+                var lyrs = lyr.getLayers().getArray().slice();
                 sel.onchange = ctrl.change.bind(lyrs, ctrl.id);
             }
             var li = document.createElement('li');
