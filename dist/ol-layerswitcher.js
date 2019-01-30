@@ -297,7 +297,7 @@ var LayerSwitcher = function (_Control) {
         value: function buildControl_(lyr, ctrl) {
             if (ctrl.type == 'select' && ctrl.id) {
                 var label = document.createElement('label');
-                label.innerHTML = ctrl.title;
+                label.innerHTML = ctrl.title + ' ';
 
                 var sel = document.createElement('select');
                 sel.id = ctrl.id;
@@ -321,9 +321,11 @@ var LayerSwitcher = function (_Control) {
                 li.appendChild(sel);
 
                 return li;
-            } else {
-                return null;
             }
+            // Add other input controls here if needed with appropriate else if clauses
+            else {
+                    return null;
+                }
         }
 
         /**
