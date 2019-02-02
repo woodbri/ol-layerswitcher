@@ -236,8 +236,19 @@ export default class LayerSwitcher extends Control {
                     },
                     url: ctrl.url,
                     success: function (data) {
+                        alert('back');
                         LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
                     }
+                })
+                .done(function() {
+                    alert('done');
+                    LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
+                })
+                .fail(function() {
+                    alert('fail');
+                })
+                .always(function() {
+                    alert('complete');
                 });
             }
             else {

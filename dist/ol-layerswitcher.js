@@ -443,8 +443,16 @@ var LayerSwitcher = function (_Control) {
                         },
                         url: ctrl.url,
                         success: function success(data) {
+                            alert('back');
                             LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
                         }
+                    }).done(function () {
+                        alert('done');
+                        LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
+                    }).fail(function () {
+                        alert('fail');
+                    }).always(function () {
+                        alert('complete');
                     });
                 } else {
                     LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
