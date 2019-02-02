@@ -398,6 +398,8 @@ var LayerSwitcher = function (_Control) {
                         }
                     }
                 }
+
+                sel.innerHTML = options_str;
             } else {
                 // might add support for inserting an options string otherwise ignore or throw error here
             }

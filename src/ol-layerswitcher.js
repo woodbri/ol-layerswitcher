@@ -192,6 +192,7 @@ export default class LayerSwitcher extends Control {
                 let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
                 options_str += '<option value="' + key + '" ' + selected + '>' + val + '</option>';
             }
+            sel.innerHTML = options_str;
         }
         else {
            // might add support for inserting an options string otherwise ignore or throw error here
