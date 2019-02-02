@@ -244,8 +244,9 @@ export default class LayerSwitcher extends Control {
                     alert('done');
                     LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
                 })
-                .fail(function() {
-                    alert('fail');
+                .fail(function(jqHXR, textStatus, errorThrown) {
+                    console.log(textStatus);
+                    alert('fail:' + textStatus);
                 })
                 .always(function() {
                     alert('complete');
