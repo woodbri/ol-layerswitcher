@@ -167,10 +167,86 @@ export default class LayerSwitcher extends Control {
     }
 
     /**
+    * **Static** Callback function to finish building the control after an ajax call
+    * @private
+    * @param {ol.layerGroup} with an addcontrol object
+    * @param {ul} a DOM UL object to a insert the control into
+    * @param {label} a DOM LABEL object belonging to the control
+    * @param {sel} a DOM SELECT object that OPTIONs will get added to
+    * @param {array|object} to build the SELECT OPTIONs out of
+    * @param {function} a callback to complete the work
+    */
+    static buildControlCallback_(lyr, ul, label, sel, options, callback) {
+        var ctrl = lyr.get('addcontrol');
+        if (Array.isArray(options)) {
+            var options_str = '';
+            var selected = '';
+            options.forEach( (item) => {
+                let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
+                options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+            });
+            sel.innerHTML = options_str;
+        }
+        else if (typeof options == 'object') {
+            for (let [key,val] of Object.entries(options)) {
+                let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
+                options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+            }
+        }
+        else {
+           // might add support for inserting an options string otherwise ignore or throw error here
+        }
+        if (ctrl.change) {
+            var lyrs = lyr.getLayers().getArray().slice();
+            sel.onchange = ctrl.change.bind(lyrs, ctrl.id);
+        }
+        var li = document.createElement('li');
+        li.appendChild(label);
+        li.appendChild(sel);
+
+        // make it the first in li in the ul
+        ul.insertBefore(li, ul.firstChild);
+
+        callback();
+    }
+
+
+    /**
     * **Static** Build a control to be inserted into panel
     * @private
     * @param {object} ctrl an addcontrol object from LayerSwitcher
     */
+    static buildControl2_(lyr, ul, callback) {
+        var ctrl = lyr.get('addcontrol');
+        if (ctrl.type == 'select' && ctrl.id) {
+            var label = document.createElement('label');
+            label.innerHTML = ctrl.title + ' ';
+
+            var sel = document.createElement('select');
+            sel.id = ctrl.id;
+            label.setAttribute('for', ctrl.id);
+
+            if (typeof ctrl.options === "function") {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'text/plain',
+                    xhrFields: {
+                        withCredentials: false
+                    },
+                    url: ctrl.url,
+                    success: function (data) {
+                        buildControlCallback_(lyr, ul, label, sel, data, callback);
+                    }
+                });
+            }
+            else {
+                buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
+            }
+        }
+        // else if (ctrl.type == '...') to extend supported controls
+    }
+
     static buildControl_(lyr, ctrl) {
         if (ctrl.type == 'select' && ctrl.id) {
             var label = document.createElement('label');
@@ -243,6 +319,12 @@ export default class LayerSwitcher extends Control {
 
             // Add a control
             if (lyr.get('addcontrol')) {
+                LayerSwitcher.buildControl2_(lyr, ul, function() {
+                    LayerSwitcher.renderLayers_(map, lyr, ul);
+                });
+            }
+
+/*
                 var ctrl = LayerSwitcher.buildControl_(lyr, lyr.get('addcontrol'));
                 if (ctrl) {
                     ul.appendChild(ctrl);
@@ -250,7 +332,7 @@ export default class LayerSwitcher extends Control {
             }
 
             LayerSwitcher.renderLayers_(map, lyr, ul);
-
+*/
         } else {
 
             li.className = 'layer';

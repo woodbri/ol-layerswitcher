@@ -7,6 +7,22 @@
 Control = 'default' in Control ? Control['default'] : Control;
 Observable = 'default' in Observable ? Observable['default'] : Observable;
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -95,6 +111,48 @@ var possibleConstructorReturn = function (self, call) {
 
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
+
+
+
+
+
+var slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
 
 var CSS_PREFIX = 'layer-switcher-';
 
@@ -287,11 +345,113 @@ var LayerSwitcher = function (_Control) {
         }
 
         /**
+        * **Static** Callback function to finish building the control after an ajax call
+        * @private
+        * @param {ol.layerGroup} with an addcontrol object
+        * @param {ul} a DOM UL object to a insert the control into
+        * @param {label} a DOM LABEL object belonging to the control
+        * @param {sel} a DOM SELECT object that OPTIONs will get added to
+        * @param {array|object} to build the SELECT OPTIONs out of
+        * @param {function} a callback to complete the work
+        */
+
+    }, {
+        key: 'buildControlCallback_',
+        value: function buildControlCallback_(lyr, ul, label, sel, options, callback) {
+            var ctrl = lyr.get('addcontrol');
+            if (Array.isArray(options)) {
+                var options_str = '';
+                var selected = '';
+                options.forEach(function (item) {
+                    var selected = localStorage[ctrl.id] === item ? 'selected' : '';
+                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                });
+                sel.innerHTML = options_str;
+            } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) == 'object') {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = Object.entries(options)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var _ref = _step.value;
+
+                        var _ref2 = slicedToArray(_ref, 2);
+
+                        var key = _ref2[0];
+                        var val = _ref2[1];
+
+                        var _selected = localStorage[ctrl.id] === key ? 'selected' : '';
+                        options_str += '<option value="' + item + '" ' + _selected + '>' + item + '</option>';
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            } else {
+                // might add support for inserting an options string otherwise ignore or throw error here
+            }
+            if (ctrl.change) {
+                var lyrs = lyr.getLayers().getArray().slice();
+                sel.onchange = ctrl.change.bind(lyrs, ctrl.id);
+            }
+            var li = document.createElement('li');
+            li.appendChild(label);
+            li.appendChild(sel);
+
+            // make it the first in li in the ul
+            ul.insertBefore(li, ul.firstChild);
+
+            callback();
+        }
+
+        /**
         * **Static** Build a control to be inserted into panel
         * @private
         * @param {object} ctrl an addcontrol object from LayerSwitcher
         */
 
+    }, {
+        key: 'buildControl2_',
+        value: function buildControl2_(lyr, ul, callback) {
+            var ctrl = lyr.get('addcontrol');
+            if (ctrl.type == 'select' && ctrl.id) {
+                var label = document.createElement('label');
+                label.innerHTML = ctrl.title + ' ';
+
+                var sel = document.createElement('select');
+                sel.id = ctrl.id;
+                label.setAttribute('for', ctrl.id);
+
+                if (typeof ctrl.options === "function") {
+                    $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        contentType: 'text/plain',
+                        xhrFields: {
+                            withCredentials: false
+                        },
+                        url: ctrl.url,
+                        success: function success(data) {
+                            buildControlCallback_(lyr, ul, label, sel, data, callback);
+                        }
+                    });
+                } else {
+                    buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
+                }
+            }
+            // else if (ctrl.type == '...') to extend supported controls
+        }
     }, {
         key: 'buildControl_',
         value: function buildControl_(lyr, ctrl) {
@@ -369,13 +529,20 @@ var LayerSwitcher = function (_Control) {
 
                 // Add a control
                 if (lyr.get('addcontrol')) {
-                    var ctrl = LayerSwitcher.buildControl_(lyr, lyr.get('addcontrol'));
-                    if (ctrl) {
-                        ul.appendChild(ctrl);
-                    }
+                    LayerSwitcher.buildControl2_(lyr, ul, function () {
+                        LayerSwitcher.renderLayers_(map, lyr, ul);
+                    });
                 }
 
-                LayerSwitcher.renderLayers_(map, lyr, ul);
+                /*
+                                var ctrl = LayerSwitcher.buildControl_(lyr, lyr.get('addcontrol'));
+                                if (ctrl) {
+                                    ul.appendChild(ctrl);
+                                }
+                            }
+                
+                            LayerSwitcher.renderLayers_(map, lyr, ul);
+                */
             } else {
 
                 li.className = 'layer';
