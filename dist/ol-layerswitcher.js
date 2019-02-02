@@ -319,34 +319,31 @@ var LayerSwitcher = function (_Control) {
             var ctrl = lyr.get('addcontrol');
             var options_str = '';
             var selected = '';
-            var ordered;
             if (Array.isArray(options)) {
                 if (ctrl.sort) {
-                    ordered = [];
                     options.sort().forEach(function (item) {
-                        ordered.push(item);
+                        var selected = localStorage[ctrl.id] === item ? 'selected' : '';
+                        options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
                     });
                 } else {
-                    ordered = options;
+                    options.forEach(function (item) {
+                        var selected = localStorage[ctrl.id] === item ? 'selected' : '';
+                        options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                    });
                 }
-                ordered.forEach(function (item) {
-                    var selected = localStorage[ctrl.id] === item ? 'selected' : '';
-                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
-                });
                 sel.innerHTML = options_str;
             } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) == 'object') {
                 if (ctrl.sort) {
-                    ordered = {};
                     Object.keys(options).sort().forEach(function (key) {
-                        return ordered[key] = options[key];
+                        var selected = localStorage[ctrl.id] === key ? 'selected' : '';
+                        options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
                     });
                 } else {
-                    ordered = options;
+                    Object.keys(options).forEach(function (key) {
+                        var selected = localStorage[ctrl.id] === key ? 'selected' : '';
+                        options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                    });
                 }
-                Object.keys(ordered).forEach(function (key) {
-                    var selected = localStorage[ctrl.id] === key ? 'selected' : '';
-                    options_str += '<option value="' + key + '" ' + selected + '>' + ordered[key] + '</option>';
-                });
                 sel.innerHTML = options_str;
             } else {
                 // might add support for inserting an options string otherwise ignore or throw error here

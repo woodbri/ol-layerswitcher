@@ -180,33 +180,34 @@ export default class LayerSwitcher extends Control {
         var ctrl = lyr.get('addcontrol');
         var options_str = '';
         var selected = '';
-        var ordered;
         if (Array.isArray(options)) {
             if (ctrl.sort) {
-                ordered = [];
-                options.sort().forEach((item) => { ordered.push(item); });
+                options.sort().forEach( (item) => {
+                    let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
+                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                });
             }
             else {
-                ordered = options;
+                options.forEach( (item) => {
+                    let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
+                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                });
             }
-            ordered.forEach( (item) => {
-                let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
-                options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
-            });
             sel.innerHTML = options_str;
         }
         else if (typeof options == 'object') {
             if (ctrl.sort) {
-                ordered = {};
-                Object.keys(options).sort().forEach((key) => ordered[key] = options[key] );
+                Object.keys(options).sort().forEach( (key) => {
+                    let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
+                    options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                });
             }
             else {
-                ordered = options;
+                Object.keys(options).forEach( (key) => {
+                    let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
+                    options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                });
             }
-            Object.keys(ordered).forEach( (key) => {
-                let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
-                options_str += '<option value="' + key + '" ' + selected + '>' + ordered[key] + '</option>';
-            });
             sel.innerHTML = options_str;
         }
         else {
