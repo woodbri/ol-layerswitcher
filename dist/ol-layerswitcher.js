@@ -361,19 +361,36 @@ var LayerSwitcher = function (_Control) {
             var ctrl = lyr.get('addcontrol');
             var options_str = '';
             var selected = '';
+            var ordered;
             if (Array.isArray(options)) {
-                options.forEach(function (item) {
+                if (crtl.sort) {
+                    ordered = [];
+                    options.sort().foreach(function (item) {
+                        ordered.push(item);
+                    });
+                } else {
+                    ordered = options;
+                }
+                ordered.forEach(function (item) {
                     var selected = localStorage[ctrl.id] === item ? 'selected' : '';
                     options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
                 });
                 sel.innerHTML = options_str;
             } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) == 'object') {
+                if (ctrl.sort) {
+                    ordered = {};
+                    Object.keys(options).sort().foreach(function (key) {
+                        return ordered[key] = options[key];
+                    });
+                } else {
+                    ordered = options;
+                }
                 var _iteratorNormalCompletion = true;
                 var _didIteratorError = false;
                 var _iteratorError = undefined;
 
                 try {
-                    for (var _iterator = Object.entries(options)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    for (var _iterator = Object.entries(ordered)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                         var _ref = _step.value;
 
                         var _ref2 = slicedToArray(_ref, 2);
@@ -435,7 +452,7 @@ var LayerSwitcher = function (_Control) {
                 sel.id = ctrl.id;
                 label.setAttribute('for', ctrl.id);
 
-                if (typeof ctrl.options === "function") {
+                if (ctrl.url) {
                     $.ajax({
                         type: 'GET',
                         dataType: 'json',
@@ -450,7 +467,7 @@ var LayerSwitcher = function (_Control) {
                     }).fail(function (jqHXR, textStatus, errorThrown) {
                         console.log('LayerSwitcher.buildControl2_ ajax request failed: ' + textStatus);
                     });
-                } else {
+                } else if (Array.isArray(ctrl.options) || _typeof(ctrl.options) === 'object') {
                     LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
                 }
             }
@@ -536,17 +553,9 @@ var LayerSwitcher = function (_Control) {
                     LayerSwitcher.buildControl2_(lyr, ul, function () {
                         LayerSwitcher.renderLayers_(map, lyr, ul);
                     });
+                } else {
+                    LayerSwitcher.renderLayers_(map, lyr, ul);
                 }
-
-                /*
-                                var ctrl = LayerSwitcher.buildControl_(lyr, lyr.get('addcontrol'));
-                                if (ctrl) {
-                                    ul.appendChild(ctrl);
-                                }
-                            }
-                
-                            LayerSwitcher.renderLayers_(map, lyr, ul);
-                */
             } else {
 
                 li.className = 'layer';

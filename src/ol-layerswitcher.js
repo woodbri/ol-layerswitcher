@@ -180,15 +180,30 @@ export default class LayerSwitcher extends Control {
         var ctrl = lyr.get('addcontrol');
         var options_str = '';
         var selected = '';
+        var ordered;
         if (Array.isArray(options)) {
-            options.forEach( (item) => {
+            if (crtl.sort) {
+                ordered = [];
+                options.sort().foreach((item) => { ordered.push(item); });
+            }
+            else {
+                ordered = options;
+            }
+            ordered.forEach( (item) => {
                 let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
                 options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
             });
             sel.innerHTML = options_str;
         }
         else if (typeof options == 'object') {
-            for (let [key,val] of Object.entries(options)) {
+            if (ctrl.sort) {
+                ordered = {};
+                Object.keys(options).sort().foreach((key) => ordered[key] = options[key] );
+            }
+            else {
+                ordered = options;
+            }
+            for (let [key,val] of Object.entries(ordered)) {
                 let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
                 options_str += '<option value="' + key + '" ' + selected + '>' + val + '</option>';
             }
@@ -227,7 +242,7 @@ export default class LayerSwitcher extends Control {
             sel.id = ctrl.id;
             label.setAttribute('for', ctrl.id);
 
-            if (typeof ctrl.options === "function") {
+            if (ctrl.url) {
                 $.ajax({
                     type: 'GET',
                     dataType: 'json',
@@ -244,7 +259,7 @@ export default class LayerSwitcher extends Control {
                     console.log('LayerSwitcher.buildControl2_ ajax request failed: ' + textStatus);
                 });
             }
-            else {
+            else if (Array.isArray(ctrl.options) || typeof ctrl.options === 'object') {
                 LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
             }
         }
@@ -327,16 +342,9 @@ export default class LayerSwitcher extends Control {
                     LayerSwitcher.renderLayers_(map, lyr, ul);
                 });
             }
-
-/*
-                var ctrl = LayerSwitcher.buildControl_(lyr, lyr.get('addcontrol'));
-                if (ctrl) {
-                    ul.appendChild(ctrl);
-                }
+            else {
+                LayerSwitcher.renderLayers_(map, lyr, ul);
             }
-
-            LayerSwitcher.renderLayers_(map, lyr, ul);
-*/
         } else {
 
             li.className = 'layer';
