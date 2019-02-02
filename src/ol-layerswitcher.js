@@ -203,10 +203,10 @@ export default class LayerSwitcher extends Control {
             else {
                 ordered = options;
             }
-            for (let [key,val] of Object.entries(ordered)) {
+            Object.keys(ordered).forEach( (key) => {
                 let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
-                options_str += '<option value="' + key + '" ' + selected + '>' + val + '</option>';
-            }
+                options_str += '<option value="' + key + '" ' + selected + '>' + ordered[key] + '</option>';
+            });
             sel.innerHTML = options_str;
         }
         else {
