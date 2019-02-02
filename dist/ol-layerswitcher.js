@@ -363,9 +363,9 @@ var LayerSwitcher = function (_Control) {
             var selected = '';
             var ordered;
             if (Array.isArray(options)) {
-                if (crtl.sort) {
+                if (ctrl.sort) {
                     ordered = [];
-                    options.sort().foreach(function (item) {
+                    options.sort().forEach(function (item) {
                         ordered.push(item);
                     });
                 } else {
@@ -379,7 +379,7 @@ var LayerSwitcher = function (_Control) {
             } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) == 'object') {
                 if (ctrl.sort) {
                     ordered = {};
-                    Object.keys(options).sort().foreach(function (key) {
+                    Object.keys(options).sort().forEach(function (key) {
                         return ordered[key] = options[key];
                     });
                 } else {

@@ -182,9 +182,9 @@ export default class LayerSwitcher extends Control {
         var selected = '';
         var ordered;
         if (Array.isArray(options)) {
-            if (crtl.sort) {
+            if (ctrl.sort) {
                 ordered = [];
-                options.sort().foreach((item) => { ordered.push(item); });
+                options.sort().forEach((item) => { ordered.push(item); });
             }
             else {
                 ordered = options;
@@ -198,7 +198,7 @@ export default class LayerSwitcher extends Control {
         else if (typeof options == 'object') {
             if (ctrl.sort) {
                 ordered = {};
-                Object.keys(options).sort().foreach((key) => ordered[key] = options[key] );
+                Object.keys(options).sort().forEach((key) => ordered[key] = options[key] );
             }
             else {
                 ordered = options;
