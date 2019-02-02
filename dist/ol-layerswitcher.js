@@ -359,9 +359,9 @@ var LayerSwitcher = function (_Control) {
         key: 'buildControlCallback_',
         value: function buildControlCallback_(lyr, ul, label, sel, options, callback) {
             var ctrl = lyr.get('addcontrol');
+            var options_str = '';
+            var selected = '';
             if (Array.isArray(options)) {
-                var options_str = '';
-                var selected = '';
                 options.forEach(function (item) {
                     var selected = localStorage[ctrl.id] === item ? 'selected' : '';
                     options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
@@ -382,7 +382,7 @@ var LayerSwitcher = function (_Control) {
                         var val = _ref2[1];
 
                         var _selected = localStorage[ctrl.id] === key ? 'selected' : '';
-                        options_str += '<option value="' + item + '" ' + _selected + '>' + item + '</option>';
+                        options_str += '<option value="' + key + '" ' + _selected + '>' + val + '</option>';
                     }
                 } catch (err) {
                     _didIteratorError = true;
@@ -443,7 +443,6 @@ var LayerSwitcher = function (_Control) {
                         },
                         url: ctrl.url,
                         success: function success(data) {
-                            alert('back');
                             LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
                         }
                     }).fail(function (jqHXR, textStatus, errorThrown) {

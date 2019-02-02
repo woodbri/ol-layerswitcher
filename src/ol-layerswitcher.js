@@ -178,9 +178,9 @@ export default class LayerSwitcher extends Control {
     */
     static buildControlCallback_(lyr, ul, label, sel, options, callback) {
         var ctrl = lyr.get('addcontrol');
+        var options_str = '';
+        var selected = '';
         if (Array.isArray(options)) {
-            var options_str = '';
-            var selected = '';
             options.forEach( (item) => {
                 let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
                 options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
@@ -190,7 +190,7 @@ export default class LayerSwitcher extends Control {
         else if (typeof options == 'object') {
             for (let [key,val] of Object.entries(options)) {
                 let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
-                options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                options_str += '<option value="' + key + '" ' + selected + '>' + val + '</option>';
             }
         }
         else {
@@ -236,7 +236,6 @@ export default class LayerSwitcher extends Control {
                     },
                     url: ctrl.url,
                     success: function (data) {
-                        alert('back');
                         LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
                     }
                 })
