@@ -236,12 +236,12 @@ export default class LayerSwitcher extends Control {
                     },
                     url: ctrl.url,
                     success: function (data) {
-                        buildControlCallback_(lyr, ul, label, sel, data, callback);
+                        LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
                     }
                 });
             }
             else {
-                buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
+                LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
             }
         }
         // else if (ctrl.type == '...') to extend supported controls
