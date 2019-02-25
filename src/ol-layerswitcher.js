@@ -221,7 +221,7 @@ export default class LayerSwitcher extends Control {
         // make it the first in li in the ul
         ul.insertBefore(li, ul.firstChild);
 
-        callback();
+        if (callback) callback();
     }
 
 
@@ -254,7 +254,7 @@ export default class LayerSwitcher extends Control {
                         },
                         url: ctrl.url,
                         success: function (data) {
-                            LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, data, callback);
+                            LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, data, null);
                         }
                     })
                     .fail(function(jqHXR, textStatus, errorThrown) {
@@ -262,11 +262,12 @@ export default class LayerSwitcher extends Control {
                     });
                 }
                 else if (Array.isArray(ctrl.options) || typeof ctrl.options === 'object') {
-                    LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, ctrl.options, callback);
+                    LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, ctrl.options, null);
                 }
             }
             // else if (ctrl.type == '...') to extend supported controls
         }
+        callback();
     }
 
     static buildControl_(lyr, ctrl) {

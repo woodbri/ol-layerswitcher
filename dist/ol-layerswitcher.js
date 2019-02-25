@@ -356,7 +356,7 @@ var LayerSwitcher = function (_Control) {
             // make it the first in li in the ul
             ul.insertBefore(li, ul.firstChild);
 
-            callback();
+            if (callback) callback();
         }
 
         /**
@@ -398,13 +398,13 @@ var LayerSwitcher = function (_Control) {
                                 },
                                 url: ctrl.url,
                                 success: function success(data) {
-                                    LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, data, callback);
+                                    LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, data, null);
                                 }
                             }).fail(function (jqHXR, textStatus, errorThrown) {
                                 console.log('LayerSwitcher.buildControl2_ ajax request failed: ' + textStatus);
                             });
                         } else if (Array.isArray(ctrl.options) || _typeof(ctrl.options) === 'object') {
-                            LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, ctrl.options, callback);
+                            LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, ctrl.options, null);
                         }
                     }
                     // else if (ctrl.type == '...') to extend supported controls
@@ -423,6 +423,8 @@ var LayerSwitcher = function (_Control) {
                     }
                 }
             }
+
+            callback();
         }
     }, {
         key: 'buildControl_',
