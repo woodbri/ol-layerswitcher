@@ -58,6 +58,16 @@ In the example about I change the LAYERS option, but could have changed any othe
    lyr.get('source').updateParams(p);
 ```
 
+Multiple controls can be added by making it an array of objects, like:
+
+```
+    addcontrol: [
+        { /* control 1 */ },
+        { /* control 2 */ },
+        ...
+    ]
+```
+
 ## Bugs and Enhancements
 
 * Currently the select control acts wierd with the mouse

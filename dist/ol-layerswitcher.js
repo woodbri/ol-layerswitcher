@@ -371,35 +371,61 @@ var LayerSwitcher = function (_Control) {
     }, {
         key: 'buildControl2_',
         value: function buildControl2_(lyr, ul, callback) {
-            var ctrl = lyr.get('addcontrol');
-            if (ctrl.type == 'select' && ctrl.id) {
-                var label = document.createElement('label');
-                label.innerHTML = ctrl.title + ' ';
+            var ctrls = lyr.get('addcontrol');
+            if (!Array.isArray(ctrls)) {
+                ctrls = [ctrls];
+            }
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
 
-                var sel = document.createElement('select');
-                sel.id = ctrl.id;
-                label.setAttribute('for', ctrl.id);
+            try {
+                for (var _iterator = ctrls[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var ctrl = _step.value;
 
-                if (ctrl.url) {
-                    $.ajax({
-                        type: 'GET',
-                        dataType: 'json',
-                        contentType: 'text/plain',
-                        xhrFields: {
-                            withCredentials: false
-                        },
-                        url: ctrl.url,
-                        success: function success(data) {
-                            LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
+                    if (ctrl.type == 'select' && ctrl.id) {
+                        var label = document.createElement('label');
+                        label.innerHTML = ctrl.title + ' ';
+
+                        var sel = document.createElement('select');
+                        sel.id = ctrl.id;
+                        label.setAttribute('for', ctrl.id);
+
+                        if (ctrl.url) {
+                            $.ajax({
+                                type: 'GET',
+                                dataType: 'json',
+                                contentType: 'text/plain',
+                                xhrFields: {
+                                    withCredentials: false
+                                },
+                                url: ctrl.url,
+                                success: function success(data) {
+                                    LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
+                                }
+                            }).fail(function (jqHXR, textStatus, errorThrown) {
+                                console.log('LayerSwitcher.buildControl2_ ajax request failed: ' + textStatus);
+                            });
+                        } else if (Array.isArray(ctrl.options) || _typeof(ctrl.options) === 'object') {
+                            LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
                         }
-                    }).fail(function (jqHXR, textStatus, errorThrown) {
-                        console.log('LayerSwitcher.buildControl2_ ajax request failed: ' + textStatus);
-                    });
-                } else if (Array.isArray(ctrl.options) || _typeof(ctrl.options) === 'object') {
-                    LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
+                    }
+                    // else if (ctrl.type == '...') to extend supported controls
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
                 }
             }
-            // else if (ctrl.type == '...') to extend supported controls
         }
     }, {
         key: 'buildControl_',
