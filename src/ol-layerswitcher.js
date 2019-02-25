@@ -181,33 +181,30 @@ export default class LayerSwitcher extends Control {
         var options_str = '';
         var selected = '';
         if (Array.isArray(options)) {
-            if (ctrl.sort) {
-                options.sort().forEach( (item) => {
-                    let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
-                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
-                });
+            if (ctrl.sort == 'asc') {
+                options = options.sort();
             }
-            else {
-                options.forEach( (item) => {
-                    let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
-                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
-                });
+            else if (ctrl.sort == 'desc') {
+                options = options.sort().reverse();
             }
+            options.forEach( (item) => {
+                let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
+                options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+            });
             sel.innerHTML = options_str;
         }
         else if (typeof options == 'object') {
-            if (ctrl.sort) {
-                Object.keys(options).sort().forEach( (key) => {
-                    let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
-                    options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
-                });
+            let keys = Object.keys(options);
+            if (ctrl.sort == 'asc') {
+                keys = keys.sort();
             }
-            else {
-                Object.keys(options).forEach( (key) => {
-                    let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
-                    options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
-                });
+            else if (ctrl.sort == 'desc') {
+                keys = keys.sort().reverse();
             }
+            keys.forEach( (key) => {
+                let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
+                options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+            });
             sel.innerHTML = options_str;
         }
         else {

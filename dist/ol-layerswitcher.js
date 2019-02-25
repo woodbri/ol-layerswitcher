@@ -320,30 +320,27 @@ var LayerSwitcher = function (_Control) {
             var options_str = '';
             var selected = '';
             if (Array.isArray(options)) {
-                if (ctrl.sort) {
-                    options.sort().forEach(function (item) {
-                        var selected = localStorage[ctrl.id] === item ? 'selected' : '';
-                        options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
-                    });
-                } else {
-                    options.forEach(function (item) {
-                        var selected = localStorage[ctrl.id] === item ? 'selected' : '';
-                        options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
-                    });
+                if (ctrl.sort == 'asc') {
+                    options = options.sort();
+                } else if (ctrl.sort == 'desc') {
+                    options = options.sort().reverse();
                 }
+                options.forEach(function (item) {
+                    var selected = localStorage[ctrl.id] === item ? 'selected' : '';
+                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                });
                 sel.innerHTML = options_str;
             } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) == 'object') {
-                if (ctrl.sort) {
-                    Object.keys(options).sort().forEach(function (key) {
-                        var selected = localStorage[ctrl.id] === key ? 'selected' : '';
-                        options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
-                    });
-                } else {
-                    Object.keys(options).forEach(function (key) {
-                        var selected = localStorage[ctrl.id] === key ? 'selected' : '';
-                        options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
-                    });
+                var keys = Object.keys(options);
+                if (ctrl.sort == 'asc') {
+                    keys = keys.sort();
+                } else if (ctrl.sort == 'desc') {
+                    keys = keys.sort().reverse();
                 }
+                keys.forEach(function (key) {
+                    var selected = localStorage[ctrl.id] === key ? 'selected' : '';
+                    options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                });
                 sel.innerHTML = options_str;
             } else {
                 // might add support for inserting an options string otherwise ignore or throw error here
