@@ -176,8 +176,8 @@ export default class LayerSwitcher extends Control {
     * @param {array|object} to build the SELECT OPTIONs out of
     * @param {function} a callback to complete the work
     */
-    static buildControlCallback_(lyr, ul, label, sel, options, callback) {
-        var ctrl = lyr.get('addcontrol');
+    static buildControlCallback_(lyr, ctrl, ul, label, sel, options, callback) {
+        //var ctrl = lyr.get('addcontrol');
         var options_str = '';
         var selected = '';
         if (Array.isArray(options)) {
@@ -257,7 +257,7 @@ export default class LayerSwitcher extends Control {
                         },
                         url: ctrl.url,
                         success: function (data) {
-                            LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
+                            LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, data, callback);
                         }
                     })
                     .fail(function(jqHXR, textStatus, errorThrown) {
@@ -265,7 +265,7 @@ export default class LayerSwitcher extends Control {
                     });
                 }
                 else if (Array.isArray(ctrl.options) || typeof ctrl.options === 'object') {
-                    LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
+                    LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, ctrl.options, callback);
                 }
             }
             // else if (ctrl.type == '...') to extend supported controls

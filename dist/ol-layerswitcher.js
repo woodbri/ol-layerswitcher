@@ -315,8 +315,8 @@ var LayerSwitcher = function (_Control) {
 
     }, {
         key: 'buildControlCallback_',
-        value: function buildControlCallback_(lyr, ul, label, sel, options, callback) {
-            var ctrl = lyr.get('addcontrol');
+        value: function buildControlCallback_(lyr, ctrl, ul, label, sel, options, callback) {
+            //var ctrl = lyr.get('addcontrol');
             var options_str = '';
             var selected = '';
             if (Array.isArray(options)) {
@@ -401,13 +401,13 @@ var LayerSwitcher = function (_Control) {
                                 },
                                 url: ctrl.url,
                                 success: function success(data) {
-                                    LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, data, callback);
+                                    LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, data, callback);
                                 }
                             }).fail(function (jqHXR, textStatus, errorThrown) {
                                 console.log('LayerSwitcher.buildControl2_ ajax request failed: ' + textStatus);
                             });
                         } else if (Array.isArray(ctrl.options) || _typeof(ctrl.options) === 'object') {
-                            LayerSwitcher.buildControlCallback_(lyr, ul, label, sel, ctrl.options, callback);
+                            LayerSwitcher.buildControlCallback_(lyr, ctrl, ul, label, sel, ctrl.options, callback);
                         }
                     }
                     // else if (ctrl.type == '...') to extend supported controls
