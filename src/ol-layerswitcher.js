@@ -189,7 +189,7 @@ export default class LayerSwitcher extends Control {
             }
             options.forEach( (item) => {
                 let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
-                options_str += '<option class="panel layer-switcher" value="' + item + '" ' + selected + '>' + item + '</option>';
+                options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
             });
             sel.innerHTML = options_str;
         }
@@ -203,7 +203,7 @@ export default class LayerSwitcher extends Control {
             }
             keys.forEach( (key) => {
                 let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
-                options_str += '<option class="panel layer-switcher" value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
             });
             sel.innerHTML = options_str;
         }
@@ -242,7 +242,6 @@ export default class LayerSwitcher extends Control {
 
                 var sel = document.createElement('select');
                 sel.id = ctrl.id;
-                sel.classList.add("panel", "layer-switcher");
                 label.setAttribute('for', ctrl.id);
 
                 if (ctrl.url) {
