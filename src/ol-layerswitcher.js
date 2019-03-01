@@ -276,6 +276,7 @@ export default class LayerSwitcher extends Control {
             label.innerHTML = ctrl.title + ' ';
 
             var sel = document.createElement('select');
+            sel.classList.add("layer-switcher");
             sel.id = ctrl.id;
             label.setAttribute('for', ctrl.id);
 
@@ -284,7 +285,7 @@ export default class LayerSwitcher extends Control {
                 var selected = '';
                 ctrl.options.forEach( (item) => {
                     let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
-                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                    options_str += '<option class="layer-switcher" value="' + item + '" ' + selected + '>' + item + '</option>';
                 });
                 sel.innerHTML = options_str;
             }
