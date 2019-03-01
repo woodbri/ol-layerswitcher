@@ -171,7 +171,7 @@ var LayerSwitcher = function (_Control) {
 
         this_.panel.onmouseout = function (e) {
             e = e || window.event;
-            if (!this_.panel.contains(e.toElement || e.relatedTarget)) {
+            if (!this_.panel.contains(e.toElement || e.relatedTarget || e.target)) {
                 this_.hidePanel();
             }
         };
@@ -327,7 +327,7 @@ var LayerSwitcher = function (_Control) {
                 }
                 options.forEach(function (item) {
                     var selected = localStorage[ctrl.id] === item ? 'selected' : '';
-                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                    options_str += '<option class="panel layer-switcher" value="' + item + '" ' + selected + '>' + item + '</option>';
                 });
                 sel.innerHTML = options_str;
             } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) == 'object') {
@@ -339,7 +339,7 @@ var LayerSwitcher = function (_Control) {
                 }
                 keys.forEach(function (key) {
                     var selected = localStorage[ctrl.id] === key ? 'selected' : '';
-                    options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                    options_str += '<option class="panel layer-switcher" value="' + key + '" ' + selected + '>' + options[key] + '</option>';
                 });
                 sel.innerHTML = options_str;
             } else {
@@ -386,6 +386,7 @@ var LayerSwitcher = function (_Control) {
 
                         var sel = document.createElement('select');
                         sel.id = ctrl.id;
+                        sel.classList.add("panel", "layer-switcher");
                         label.setAttribute('for', ctrl.id);
 
                         if (ctrl.url) {
@@ -425,42 +426,6 @@ var LayerSwitcher = function (_Control) {
             }
 
             callback();
-        }
-    }, {
-        key: 'buildControl_',
-        value: function buildControl_(lyr, ctrl) {
-            if (ctrl.type == 'select' && ctrl.id) {
-                var label = document.createElement('label');
-                label.innerHTML = ctrl.title + ' ';
-
-                var sel = document.createElement('select');
-                sel.classList.add("layer-switcher");
-                sel.id = ctrl.id;
-                label.setAttribute('for', ctrl.id);
-
-                if (ctrl.options) {
-                    var options_str = '';
-                    var selected = '';
-                    ctrl.options.forEach(function (item) {
-                        var selected = localStorage[ctrl.id] === item ? 'selected' : '';
-                        options_str += '<option class="layer-switcher" value="' + item + '" ' + selected + '>' + item + '</option>';
-                    });
-                    sel.innerHTML = options_str;
-                }
-                if (ctrl.change) {
-                    var lyrs = lyr.getLayers().getArray().slice();
-                    sel.onchange = ctrl.change.bind(lyrs, ctrl.id);
-                }
-                var li = document.createElement('li');
-                li.appendChild(label);
-                li.appendChild(sel);
-
-                return li;
-            }
-            // Add other input controls here if needed with appropriate else if clauses
-            else {
-                    return null;
-                }
         }
 
         /**

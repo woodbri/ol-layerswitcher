@@ -57,7 +57,7 @@ export default class LayerSwitcher extends Control {
 
         this_.panel.onmouseout = function(e) {
             e = e || window.event;
-            if (!this_.panel.contains(e.toElement || e.relatedTarget)) {
+            if (!this_.panel.contains(e.toElement || e.relatedTarget || e.target)) {
                 this_.hidePanel();
             }
         };
@@ -189,7 +189,7 @@ export default class LayerSwitcher extends Control {
             }
             options.forEach( (item) => {
                 let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
-                options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
+                options_str += '<option class="panel layer-switcher" value="' + item + '" ' + selected + '>' + item + '</option>';
             });
             sel.innerHTML = options_str;
         }
@@ -203,7 +203,7 @@ export default class LayerSwitcher extends Control {
             }
             keys.forEach( (key) => {
                 let selected = (localStorage[ctrl.id] === key) ? 'selected' : '';
-                options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                options_str += '<option class="panel layer-switcher" value="' + key + '" ' + selected + '>' + options[key] + '</option>';
             });
             sel.innerHTML = options_str;
         }
@@ -242,6 +242,7 @@ export default class LayerSwitcher extends Control {
 
                 var sel = document.createElement('select');
                 sel.id = ctrl.id;
+                sel.classList.add("panel", "layer-switcher");
                 label.setAttribute('for', ctrl.id);
 
                 if (ctrl.url) {
@@ -270,40 +271,6 @@ export default class LayerSwitcher extends Control {
         callback();
     }
 
-    static buildControl_(lyr, ctrl) {
-        if (ctrl.type == 'select' && ctrl.id) {
-            var label = document.createElement('label');
-            label.innerHTML = ctrl.title + ' ';
-
-            var sel = document.createElement('select');
-            sel.classList.add("layer-switcher");
-            sel.id = ctrl.id;
-            label.setAttribute('for', ctrl.id);
-
-            if (ctrl.options) {
-                var options_str = '';
-                var selected = '';
-                ctrl.options.forEach( (item) => {
-                    let selected = (localStorage[ctrl.id] === item) ?  'selected' : '';
-                    options_str += '<option class="layer-switcher" value="' + item + '" ' + selected + '>' + item + '</option>';
-                });
-                sel.innerHTML = options_str;
-            }
-            if (ctrl.change) {
-                var lyrs = lyr.getLayers().getArray().slice();
-                sel.onchange = ctrl.change.bind(lyrs, ctrl.id);
-            }
-            var li = document.createElement('li');
-            li.appendChild(label);
-            li.appendChild(sel);
-
-            return li;
-        }
-        // Add other input controls here if needed with appropriate else if clauses
-        else {
-            return null;
-        }
-    }
 
     /**
     * **Static** Render all layers that are children of a group.
