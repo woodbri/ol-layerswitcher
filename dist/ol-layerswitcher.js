@@ -327,7 +327,7 @@ var LayerSwitcher = function (_Control) {
                 }
                 options.forEach(function (item) {
                     var selected = localStorage[ctrl.id] === item ? 'selected' : '';
-                    options_str += '<option class="panel layer-switcher" value="' + item + '" ' + selected + '>' + item + '</option>';
+                    options_str += '<option value="' + item + '" ' + selected + '>' + item + '</option>';
                 });
                 sel.innerHTML = options_str;
             } else if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) == 'object') {
@@ -339,7 +339,7 @@ var LayerSwitcher = function (_Control) {
                 }
                 keys.forEach(function (key) {
                     var selected = localStorage[ctrl.id] === key ? 'selected' : '';
-                    options_str += '<option class="panel layer-switcher" value="' + key + '" ' + selected + '>' + options[key] + '</option>';
+                    options_str += '<option value="' + key + '" ' + selected + '>' + options[key] + '</option>';
                 });
                 sel.innerHTML = options_str;
             } else {
@@ -386,7 +386,6 @@ var LayerSwitcher = function (_Control) {
 
                         var sel = document.createElement('select');
                         sel.id = ctrl.id;
-                        sel.classList.add("panel", "layer-switcher");
                         label.setAttribute('for', ctrl.id);
 
                         if (ctrl.url) {
